@@ -1,0 +1,65 @@
+<html>
+
+<head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="./plotlySlider.js"></script>
+</head>
+<p>
+    Hello World
+</p>
+<script>
+    // fetch from gitgub
+    const url = "https://raw.githubusercontent.com/NadeemWard/fractals/main/data/4_triangles_scale_1.3_depth_3.json";
+
+    async function fetchSomething(url) {
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        }
+        catch (error) {
+            console.log("Oups!");
+            console.log(error);
+        }
+    }
+    fetchSomething(url)
+        .then(response => console.log(response))
+
+    // with server running 
+    fetch('./data/4_triangles_scale_1.3_depth_3.json')
+        .then(response => response.json())
+        .then(json => plotlyPlot(json.x, json.y, 'myPlot'))
+
+    // wrapper function for everything
+    function plotSelector() {
+        const selectorValue = document.getElementById("mySelector").value;
+        let data;
+        if (selectorValue == 1) {
+            data = './data/4_triangles_scale_1.3_depth_3.json'
+        }
+        else if (selectorValue == 2) {
+            data = './data/4_triangles_scale_1.6_depth_3.json'
+        }
+        else if (selectorValue == 3) {
+            data = './data/10_triangles_scale_1-5_depth_3.json'
+        }
+        else {
+            data = './data/straight_line.json'
+        }
+        fetch(data)
+            .then(response => response.json())
+            .then(json => plotlyPlot(json.x, json.y, 'myPlot'))
+    };
+
+</script>
+
+<select id="mySelector" onchange="plotSelector()">
+    <option value=1>4 triangles, 1.3 scale, depth 3</option>
+    <option value=2>4 triangles 1.6 scale depth 3</option>
+    <option value=3>10 triangles scale 1.5 depth 3</option>
+    <option value="4"> Straight line</option>
+
+</select>
+<div id='myPlot'></div>
+
+</html>
